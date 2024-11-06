@@ -1,3 +1,7 @@
+FROM nexus.mia-platform.eu/dev-portal/marketplace:2.2.0 as dev-portal-marketplace
+
+########################################################################################################################
+
 FROM nginx:1.23.3-alpine as build
 
 # - stop vulnerabilities:package CRITICAL Vulnerability found in os package type (APKG) - curl (fixed in: 7.87.0-r2)(CVE-2023-23914 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-23914)
@@ -21,6 +25,8 @@ RUN touch ./off \
   && echo "mia_template_service_name_placeholder: $COMMIT_SHA" >> /etc/nginx/commit.sha
 
 WORKDIR /usr/static
+
+COPY --from=dev-portal-marketplace /usr/static ./dev-portal-marketplace
 
 COPY ./packages/home/build ./dev-portal-home
 COPY ./build ./dev-portal-documentation
