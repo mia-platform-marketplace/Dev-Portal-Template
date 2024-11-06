@@ -1,0 +1,16 @@
+.page_container {
+  padding: 0 50px;
+  margin-bottom: 32px;
+}
+
+.discover_more {
+  margin-top: 60px;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666666;
+  font-size: 40px;
+  line-height: 34px;
+  font-weight: bold;
+}

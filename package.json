@@ -1,0 +1,62 @@
+{
+  "name": "mia_template_service_name_placeholder",
+  "version": "0.0.1",
+  "license": "SEE LICENSE IN LICENSE",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "home": "yarn workspace @dev-portal/home",
+    "lint": "eslint . --ext .mjs,.js,.jsx,.ts,.tsx --resolve-plugins-relative-to .",
+    "check:types": "yarn tsc --noEmit && echo \"✓ check types\"",
+    "coverage": "echo \"TODO\"",
+    "start": "docusaurus start",
+    "build:docs": "docusaurus build",
+    "build:home": "yarn home build",
+    "build": "run-s build:docs build:home",
+    "serve": "docusaurus serve"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^2.4.0",
+    "@docusaurus/plugin-content-docs": "^2.4.0",
+    "@docusaurus/plugin-content-pages": "^2.4.0",
+    "@docusaurus/theme-classic": "^2.4.0",
+    "@docusaurus/theme-common": "^2.4.0",
+    "@mdx-js/react": "^1.6.22",
+    "clsx": "^1.2.1",
+    "prism-react-renderer": "^1.3.5",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-helmet-async": "^1.3.0",
+    "react-router-dom": "5.3.4"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "^2.4.0",
+    "@docusaurus/types": "^2.4.0",
+    "@tsconfig/docusaurus": "^1.0.7",
+    "@types/node": "^20.1.3",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@types/react-router-dom": "^5.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "confusing-browser-globals": "^1.0.11",
+    "eslint": "^8.39.0",
+    "eslint-config-esnext": "^4.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "eslint-plugin-typescript-sort-keys": "^2.3.0",
+    "eslint-visitor-keys": "^3.4.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.0.4",
+    "webpack": "^5.82.1"
+  },
+  "engines": {
+    "node": ">=16.17.0"
+  }
+}

@@ -1,0 +1,108 @@
+variables:
+  GIT_DEPTH: 10
+  GIT_SUBMODULE_STRATEGY: recursive
+  ARTIFACT_COMPRESSION_LEVEL: fastest
+  FF_USE_FASTZIP: 1
+  NEXUS_URL: nexus.mia-platform.eu
+  IMAGE_NAME: mia_template_image_name_placeholder
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH
+
+default:
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - scheduler_failure
+  tags:
+    - build
+  services:
+    - name: docker:20-dind
+      alias: docker
+  image: node:16-alpine
+
+".install-cache": &install_cache
+  key:
+    files:
+      - yarn.lock
+  paths:
+    - .yarn/
+
+".build-cache": &build_cache
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - build
+    - packages/home/build
+
+stages:
+  - .pre
+  - build
+  - release
+
+install:
+  stage: .pre
+  cache:
+    - <<: *install_cache
+  script:
+    - yarn install --immutable
+
+build:
+  stage: build
+  needs:
+    - install
+  cache:
+    - <<: *install_cache
+      policy: pull
+    - <<: *build_cache
+      policy: push
+  before_script:
+    - yarn install --immutable
+  script:
+    - yarn build
+
+".docker-job":
+  image: docker:20.10.24
+  script:
+    - docker login -u ${NEXUS_USER} -p ${NEXUS_TOKEN} ${NEXUS_URL}
+    - |
+      docker build \
+        --file Dockerfile \
+        --build-arg COMMIT_SHA=$CI_COMMIT_SHA \
+        --build-arg VERSION=$DOCKER_TAG \
+        --build-arg CONTAINER_NAME="$IMAGE_NAME" \
+        --tag $REMOTE_IMAGE_NAME:$DOCKER_TAG \
+        .
+    - test -z "$COMMIT_SHA_FILEPATH" || docker run --rm $REMOTE_IMAGE_NAME:$DOCKER_TAG
+      cat $COMMIT_SHA_FILEPATH
+    - |
+      if [ -n "${SYSDIG_SECURE_TOKEN}" ] && [ -n "${SYSDIG_SECURE_BACKEND_ENDPOINT}" ]; then
+        docker run \
+          --rm \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          quay.io/sysdig/secure-inline-scan:2 \
+          --sysdig-token "${SYSDIG_SECURE_TOKEN}" \
+          --sysdig-url "${SYSDIG_SECURE_BACKEND_ENDPOINT}" \
+          --storage-type docker-daemon \
+          --storage-path /var/run/docker.sock \
+          ${REMOTE_IMAGE_NAME}:${DOCKER_TAG}
+      fi
+    - docker push $REMOTE_IMAGE_NAME:$DOCKER_TAG
+
+build-docker:
+  stage: release
+  needs:
+    - build
+  cache:
+    - <<: *build_cache
+      policy: pull
+  extends:
+    - ".docker-job"
+  variables:
+    DOCKER_TAG: latest
+    REMOTE_IMAGE_NAME: ${NEXUS_URL}/${IMAGE_NAME}
+  before_script:
+    - test -z "$CI_COMMIT_TAG" || export DOCKER_TAG=$(echo $CI_COMMIT_TAG | sed s/^v//)
+

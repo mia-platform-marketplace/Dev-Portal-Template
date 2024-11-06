@@ -1,0 +1,9 @@
+.pnp.*
+.yarn/*
+
+build/
+node_modules/
+.docusaurus/
+
+.vscode/
+.idea/

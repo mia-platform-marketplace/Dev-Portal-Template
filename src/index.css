@@ -1,0 +1,16 @@
+div#__docusaurus {
+  height: inherit;
+  width: inherit;
+  overflow: auto;
+
+  /* CSS from Docusaurus HTML */
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background-color: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  color-scheme: var(--ifm-color-scheme);
+  font: var(--ifm-font-size-base)/var(--ifm-line-height-base) var(--ifm-font-family-base);
+  text-rendering: optimizelegibility;
+}

@@ -1,0 +1,11 @@
+:root {
+  --ifm-color-primary: var(--dev-portal-primary-color,#1890ff);
+  --ifm-color-primary-dark: var(--dev-portal-primary-7,#096dd9);
+  --ifm-color-primary-darker: var(--dev-portal-primary-8,#0050b3);
+  --ifm-color-primary-darkest: var(--dev-portal-primary-9,#003a8c);
+  --ifm-color-primary-light: var(--dev-portal-primary-3,#91d5ff);
+  --ifm-color-primary-lighter: var(--dev-portal-primary-2,#bae7ff);
+  --ifm-color-primary-lightest: var(--dev-portal-primary-1#e6f7ff);
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
